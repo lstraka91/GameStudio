@@ -8,15 +8,31 @@ public class Score {
 	private int identPlayer;
 	private int identGame;
 	private Date datePlayed;
+	private String gameName;
+	private String playerName;
 	
 	
-	public Score(int score, int identPlayer, int identGame, Date datePlayed) {
-		super();
+	public Score(int score, int identPlayer, int identGame, Date datePlayed,
+			String gameName, String playerName) {
+		
 		this.score = score;
 		this.identPlayer = identPlayer;
 		this.identGame = identGame;
 		this.datePlayed = datePlayed;
+		this.gameName = gameName;
+		this.playerName = playerName;
 	}
+
+
+	public Score(int score, int identPlayer, int identGame, Date datePlayed) {
+		
+		this.score = score;
+		this.identPlayer = identPlayer;
+		this.identGame = identGame;
+		this.datePlayed = datePlayed;
+		
+	}
+	
 	
 	public int getScore() {
 		return score;
@@ -43,5 +59,31 @@ public class Score {
 		this.datePlayed = datePlayed;
 	}
 	
-	
+	public String getGameName() {
+		return gameName;
+	}
+
+
+	public void setGameName(String gameName) {
+		this.gameName = gameName;
+	}
+
+
+	public String getPlayerName() {
+		return playerName;
+	}
+
+
+	public void setPlayerName(String playerName) {
+		this.playerName = playerName;
+	}
+
+
+	public String toString(){
+		StringBuilder sb= new StringBuilder();
+		sb.append(getGameName()+" ");
+		sb.append(getPlayerName()+ " ");
+		sb.append(getScore()+" ");
+		return sb.toString();
+	}
 }

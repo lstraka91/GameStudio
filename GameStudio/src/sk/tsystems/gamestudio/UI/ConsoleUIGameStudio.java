@@ -20,7 +20,7 @@ public class ConsoleUIGameStudio implements UserIntefaceGameStudio {
 	};
 
 	private enum Games {
-		MINESWEEPER, N_PUZZLE, GUESS_NUMBER
+		MINESWEEPER, N_PUZZLE, GUESS_NUMBER, GO_BACK
 	};
 
 	public ConsoleUIGameStudio(Games games) {
@@ -49,7 +49,8 @@ public class ConsoleUIGameStudio implements UserIntefaceGameStudio {
 	}
 
 	private MenuOption showMenu() {
-		System.out.println("Welcome to my Game-Center-Studio");
+		System.out.println("-----------------------------------------------");
+		System.out.println("--------Welcome to my Game-Center-Studio-------");
 		for (MenuOption option : MenuOption.values()) {
 			System.out.printf("%d. %s%n", option.ordinal() + 1, option);
 		}
@@ -94,7 +95,8 @@ public class ConsoleUIGameStudio implements UserIntefaceGameStudio {
 			GuessNumber guessNum = new GuessNumber(20);
 			guessNum.run();
 			break;
-
+		case 4: 
+			return;
 		default:
 			break;
 		}

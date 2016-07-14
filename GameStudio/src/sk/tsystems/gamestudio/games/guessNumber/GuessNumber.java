@@ -43,6 +43,7 @@ public class GuessNumber implements GuessNumberInterface,Runnable {
 			} else if (guess < toGuess) {
 				System.out.println("Try again with bigger number");
 			}
+			readLine.close();
 		}
 	}
 	@Override
