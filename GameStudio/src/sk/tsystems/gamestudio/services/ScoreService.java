@@ -1,5 +1,10 @@
 package sk.tsystems.gamestudio.services;
 
-public interface ScoreService {
+import java.util.List;
 
+import sk.tsystems.gamestudio.entity.Score;
+
+public interface ScoreService {
+void add(Score score);
+List <Score> getScoreforGame(String game);
 }
