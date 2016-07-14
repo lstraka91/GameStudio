@@ -1,15 +1,13 @@
 package sk.tsystems.gamestudio.games.guessNumber;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Random;
 import java.util.Scanner;
 
-public class GuessNumber implements GuessNumberInterface {
+public class GuessNumber implements GuessNumberInterface,Runnable {
 	private int toGuess;
 	private int turns;
 	private boolean guessed;
+	private int range;
 
 	public int getTurns() {
 		return turns;
@@ -23,7 +21,8 @@ public class GuessNumber implements GuessNumberInterface {
 		toGuess = new Random().nextInt(range);
 		turns = 0;
 		guessed = false;
-		guess(range);
+		this.range=range; 
+		
 	}
 
 	/* (non-Javadoc)
@@ -38,13 +37,17 @@ public class GuessNumber implements GuessNumberInterface {
 			int guess = readLine.nextInt();
 			if (guess == toGuess) {
 				guessed = true;
-				System.out.println("Congrats");
+				System.out.println("Congrats! You guess the number on "+getTurns()+" turns");
 			} else if (guess > toGuess) {
 				System.out.println("Try again with lower number");
 			} else if (guess < toGuess) {
 				System.out.println("Try again with bigger number");
 			}
 		}
+	}
+	@Override
+	public void run(){
+		guess(range);
 	}
 
 }
