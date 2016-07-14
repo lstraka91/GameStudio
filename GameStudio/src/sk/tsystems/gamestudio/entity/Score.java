@@ -1,6 +1,7 @@
 package sk.tsystems.gamestudio.entity;
 
 import java.util.Date;
+import java.util.Formatter;
 
 public class Score {
 	
@@ -81,9 +82,14 @@ public class Score {
 
 	public String toString(){
 		StringBuilder sb= new StringBuilder();
-		sb.append(getGameName()+" ");
-		sb.append(getPlayerName()+ " ");
-		sb.append(getScore()+" \n");
+		Formatter formatter = new Formatter();
+		
+		sb.append(formatter.format("%-10s %3d  %td.%tm.%ty ",getPlayerName(),getScore(),getDatePlayed(),getDatePlayed(),getDatePlayed()));
+		
+//		sb.append(formatter.format("",getPlayerName()));
+//		sb.append(formatter.format("%d",getScore()));
+		sb.append("\n");
+		formatter.close();
 		return sb.toString();
 	}
 }

@@ -13,8 +13,12 @@ import sk.tsystems.gamestudio.exceptions.ScoreException;
 import sk.tsystems.gamestudio.services.jdbc.DatabaseSetting;
 
 public class ScoreServiceImpl implements ScoreService {
+	private String game;
+	private final String SELECT_SCORE = "select s.SCORE,s.ID_USER, s.ID_GAME,s.DATE_PLAYED,g.name, p.NAME from score s join game g on s.ID_GAME = g.ID_GAME join player p on s.ID_USER = p.ID_USER WHERE g.name like ? ORDER BY s.score DESC ";
 
-	private final String SELECT_SCORE = "select s.SCORE,s.ID_USER, s.ID_GAME,s.DATE_PLAYED,g.name, p.NAME from score s join game g on s.ID_GAME = g.ID_GAME join player p on s.ID_USER = p.ID_USER";
+	public ScoreServiceImpl() {
+		game = null;
+	}
 
 	@Override
 	public void add(Score score) {
@@ -26,16 +30,12 @@ public class ScoreServiceImpl implements ScoreService {
 	public List<Score> getScoreforGame(String game) throws ScoreException {
 		List<Score> scores = new ArrayList<>();
 
-		try (Connection connection = DriverManager.getConnection(
-				DatabaseSetting.URL, DatabaseSetting.USER,
-				DatabaseSetting.PASSWORD);
-				PreparedStatement ps = connection
-						.prepareStatement(SELECT_SCORE)) {
-			// ps.setString(1, game);
+		try (Connection connection = DriverManager.getConnection(DatabaseSetting.URL, DatabaseSetting.USER,
+				DatabaseSetting.PASSWORD); PreparedStatement ps = connection.prepareStatement(SELECT_SCORE)) {
+			ps.setString(1, game);
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
-					Score score = new Score(rs.getInt(1), rs.getInt(2),
-							rs.getInt(3), rs.getDate(4), rs.getString(5),
+					Score score = new Score(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getDate(4), rs.getString(5),
 							rs.getString(6));
 					scores.add(score);
 				}
@@ -49,16 +49,31 @@ public class ScoreServiceImpl implements ScoreService {
 
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
+		int index = 0;
 		try {
-			for (Score score : getScoreforGame("game")) {
-				sb.append(score.toString());
-			}
+			System.out.printf("   %-10s %3s  %s ", "PLAYER", "SCORE", "DATE");
+			System.out.println();
+			for (Score score : getScoreforGame(getGame())) {
+				index++;
+				sb.append(index + ". " + score.toString());
 
+			}
+			if (index == 0) {
+				sb.append("There is no High Score yet!");
+			}
 		} catch (ScoreException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		return sb.toString();
+	}
+
+	public String getGame() {
+		return game;
+	}
+
+	public void setGame(String game) {
+		this.game = game;
 	}
 
 }

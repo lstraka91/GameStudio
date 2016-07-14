@@ -34,6 +34,8 @@ public class GuessNumber implements GuessNumberInterface,Runnable {
 			turns++;
 			System.out.println("Enter number from 0 to " + number);
 			Scanner readLine = new Scanner(System.in);
+			if(readLine.hasNextInt()){
+				
 			int guess = readLine.nextInt();
 			if (guess == toGuess) {
 				guessed = true;
@@ -43,7 +45,10 @@ public class GuessNumber implements GuessNumberInterface,Runnable {
 			} else if (guess < toGuess) {
 				System.out.println("Try again with bigger number");
 			}
-			readLine.close();
+			}else if(readLine.hasNext("x|X|exit")){
+				guessed=true;
+			}
+			//readLine.close();
 		}
 	}
 	@Override

@@ -26,6 +26,11 @@ import sk.tsystems.gamestudio.games.minesweeper.core.Tile.State;
 public class ConsoleUI implements UserInterface {
 	/** Playing field. */
 	private Field field;
+	private boolean isPlaying;
+
+	public ConsoleUI() {
+		isPlaying=true;
+	}
 
 	/** Input reader. */
 	private BufferedReader input = new BufferedReader(new InputStreamReader(
@@ -54,7 +59,7 @@ public class ConsoleUI implements UserInterface {
 	@Override
 	public void newGameStarted(Field field) {
 		this.field = field;
-		boolean isPlaying=true;
+		
 		do {
 			update();
 			processInput();
@@ -147,7 +152,9 @@ public class ConsoleUI implements UserInterface {
 			if (matcher.group(1).equalsIgnoreCase("x")) {
 				if (matcher.group(0).length() < 2) {
 					System.out.println("Bye Bye !");
-					System.exit(0);
+					isPlaying=false;
+					return;
+//					System.exit(0);
 				} else {
 					System.out.println("To exit type: 'X' or 'x' ");
 					processInput();

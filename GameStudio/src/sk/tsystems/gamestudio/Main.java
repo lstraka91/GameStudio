@@ -1,5 +1,6 @@
 package sk.tsystems.gamestudio;
 
+import sk.tsystems.gamestudio.UI.ConsoleUIGameStudio;
 import sk.tsystems.gamestudio.services.ScoreServiceImpl;
 
 public class Main {
@@ -12,11 +13,11 @@ public class Main {
 //		g.addGame(new Game(2, "nPuzzle"));
 //		g.addGame(new Game(3, "Guess The Number"));
 //		UserIntefaceGameStudio ui = new ConsoleUIGameStudio(g);
-//		UserIntefaceGameStudio ui = new ConsoleUIGameStudio();
-//		ui.run();
+		UserIntefaceGameStudio ui = new ConsoleUIGameStudio();
+		ui.run();
 
-		ScoreServiceImpl serv = new ScoreServiceImpl();
-		System.out.println(serv.toString());
+//		ScoreServiceImpl serv = new ScoreServiceImpl();
+//		System.out.println(serv.toString());
 		
 	}
 
