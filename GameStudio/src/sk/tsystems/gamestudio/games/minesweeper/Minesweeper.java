@@ -9,7 +9,6 @@ import sk.tsystems.gamestudio.games.minesweeper.core.Field;
 public class Minesweeper implements Runnable {
 	/** User interface. */
 	private UserInterface userInterface;
-
 	private long startMillis;
 	private BestTimes bestTimes;
 	private Settings setting;
@@ -35,22 +34,25 @@ public class Minesweeper implements Runnable {
 	 */
 	public Minesweeper() {
 		instance = this;
-		
-		//setSetting(setting.load());
+
+		// setSetting(setting.load());
 		setSetting(setting.BEGGINER);
 		userInterface = new ConsoleUI();
-		field = new Field(setting.getRowCount(), setting.getColumnCount(), setting.getMineCount());
+		field = new Field(setting.getRowCount(), setting.getColumnCount(),
+				setting.getMineCount());
 		startMillis = System.currentTimeMillis();
-		
-		//userInterface.newGameStarted(field);
+
+		// userInterface.newGameStarted(field);
 	}
+
 	@Override
-	public void run(){
+	public void run() {
 		userInterface.newGameStarted(field);
 	}
 
 	/**
 	 * Instance of Minesweeper / Singleton
+	 * 
 	 * @return
 	 */
 	public static Minesweeper getInstance() {
@@ -68,7 +70,7 @@ public class Minesweeper implements Runnable {
 	 * @return int in seconds of playing
 	 */
 	public int getPlayingSeconds() {
-		int currentTime = (int) ((System.currentTimeMillis() - startMillis)/1000L);
+		int currentTime = (int) ((System.currentTimeMillis() - startMillis) / 1000L);
 		return currentTime;
 	}
 

@@ -83,7 +83,7 @@ public class Score {
 		StringBuilder sb= new StringBuilder();
 		sb.append(getGameName()+" ");
 		sb.append(getPlayerName()+ " ");
-		sb.append(getScore()+" ");
+		sb.append(getScore()+" \n");
 		return sb.toString();
 	}
 }
