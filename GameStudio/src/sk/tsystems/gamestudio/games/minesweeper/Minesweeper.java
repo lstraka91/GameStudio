@@ -13,6 +13,15 @@ public class Minesweeper implements Runnable {
 	private BestTimes bestTimes;
 	private Settings setting;
 	private Field field;
+	private int score;
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
 
 	public Settings getSetting() {
 		return setting;
@@ -41,13 +50,14 @@ public class Minesweeper implements Runnable {
 		field = new Field(setting.getRowCount(), setting.getColumnCount(),
 				setting.getMineCount());
 		startMillis = System.currentTimeMillis();
-
+		this.score = 0;
 		// userInterface.newGameStarted(field);
 	}
 
 	@Override
 	public void run() {
 		userInterface.newGameStarted(field);
+
 	}
 
 	/**

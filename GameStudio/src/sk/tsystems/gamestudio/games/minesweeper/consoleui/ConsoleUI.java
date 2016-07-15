@@ -10,6 +10,8 @@ import java.util.regex.Pattern;
 
 
 
+
+import sk.tsystems.gamestudio.entity.Score;
 import sk.tsystems.gamestudio.games.minesweeper.BestTimes;
 import sk.tsystems.gamestudio.games.minesweeper.Minesweeper;
 import sk.tsystems.gamestudio.games.minesweeper.UserInterface;
@@ -27,7 +29,8 @@ public class ConsoleUI implements UserInterface {
 	/** Playing field. */
 	private Field field;
 	private boolean isPlaying;
-
+	
+	
 	public ConsoleUI() {
 		isPlaying=true;
 	}
@@ -66,7 +69,7 @@ public class ConsoleUI implements UserInterface {
 			if (field.getState() == GameState.SOLVED) {
 				update();
 				System.out.println("You win!!");
-				//System.exit(0);
+				Minesweeper.getInstance().setScore(Minesweeper.getInstance().getPlayingSeconds());
 				isPlaying=false;
 			} else if (field.getState() == GameState.FAILED) {
 				update();

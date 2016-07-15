@@ -4,12 +4,15 @@ public class Game {
 
 	private int identGame;
 	private String gameName;
-	
-	public Game(int identGame, String gameName) {
-	
+	private String gameURL;
+	private String author;
+
+	public Game(int identGame, String gameName, String author, String gameURL) {
+
 		this.identGame = identGame;
 		this.gameName = gameName;
-		
+		this.gameURL = gameURL;
+		this.author = author;
 	}
 
 	public int getIdentGame() {
@@ -27,9 +30,25 @@ public class Game {
 	public void setGameName(String gameName) {
 		this.gameName = gameName;
 	}
-	
-	public String toString(){
-		StringBuilder sb =new StringBuilder();
+
+	public String getGameURL() {
+		return gameURL;
+	}
+
+	public void setGameURL(String gameURL) {
+		this.gameURL = gameURL;
+	}
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
 		sb.append(getGameName());
 		return sb.toString();
 	}

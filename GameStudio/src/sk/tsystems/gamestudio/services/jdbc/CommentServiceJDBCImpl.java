@@ -1,10 +1,11 @@
-package sk.tsystems.gamestudio.services;
+package sk.tsystems.gamestudio.services.jdbc;
 
 import java.util.List;
 
 import sk.tsystems.gamestudio.entity.Comment;
+import sk.tsystems.gamestudio.services.CommentService;
 
-public class CommentServiceImpl implements CommentService {
+public class CommentServiceJDBCImpl implements CommentService {
 
 	@Override
 	public void add(Comment comment) {

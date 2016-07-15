@@ -1,4 +1,4 @@
-package sk.tsystems.gamestudio.services;
+package sk.tsystems.gamestudio.services.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,19 +10,32 @@ import java.util.List;
 
 import sk.tsystems.gamestudio.entity.Score;
 import sk.tsystems.gamestudio.exceptions.ScoreException;
-import sk.tsystems.gamestudio.services.jdbc.DatabaseSetting;
+import sk.tsystems.gamestudio.services.ScoreService;
 
-public class ScoreServiceImpl implements ScoreService {
+public class ScoreServiceJDBCImpl implements ScoreService {
 	private String game;
 	private final String SELECT_SCORE = "select s.SCORE,s.ID_USER, s.ID_GAME,s.DATE_PLAYED,g.name, p.NAME from score s join game g on s.ID_GAME = g.ID_GAME join player p on s.ID_USER = p.ID_USER WHERE g.name like ? ORDER BY s.score DESC ";
+	private final String INSERT_INTO_SCORE = "insert into SCORE (ID_USER,ID_GAME, score, date_played)	values(?, ?, ?, ? )";
 
-	public ScoreServiceImpl() {
+	public ScoreServiceJDBCImpl() {
 		game = null;
 	}
 
 	@Override
-	public void add(Score score) {
-		// TODO Auto-generated method stub
+	public void add(Score score) throws ScoreException {
+		try (Connection connection = DriverManager.getConnection(
+				DatabaseSetting.URL, DatabaseSetting.USER,
+				DatabaseSetting.PASSWORD);
+				PreparedStatement ps = connection
+						.prepareStatement(INSERT_INTO_SCORE)) {
+			ps.setInt(1, score.getIdentPlayer());
+			ps.setInt(2, score.getIdentGame());
+			ps.setInt(3, score.getScore());
+			ps.setDate(4, new java.sql.Date(score.getDatePlayed().getTime()));
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			throw new ScoreException("Error saving score", e);
+		}
 
 	}
 
@@ -30,12 +43,16 @@ public class ScoreServiceImpl implements ScoreService {
 	public List<Score> getScoreforGame(String game) throws ScoreException {
 		List<Score> scores = new ArrayList<>();
 
-		try (Connection connection = DriverManager.getConnection(DatabaseSetting.URL, DatabaseSetting.USER,
-				DatabaseSetting.PASSWORD); PreparedStatement ps = connection.prepareStatement(SELECT_SCORE)) {
+		try (Connection connection = DriverManager.getConnection(
+				DatabaseSetting.URL, DatabaseSetting.USER,
+				DatabaseSetting.PASSWORD);
+				PreparedStatement ps = connection
+						.prepareStatement(SELECT_SCORE)) {
 			ps.setString(1, game);
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
-					Score score = new Score(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getDate(4), rs.getString(5),
+					Score score = new Score(rs.getInt(1), rs.getInt(2),
+							rs.getInt(3), rs.getDate(4), rs.getString(5),
 							rs.getString(6));
 					scores.add(score);
 				}
@@ -51,8 +68,8 @@ public class ScoreServiceImpl implements ScoreService {
 		StringBuilder sb = new StringBuilder();
 		int index = 0;
 		try {
-			System.out.printf("   %-10s %3s  %s ", "PLAYER", "SCORE", "DATE");
-			System.out.println();
+			System.out.printf("   %-10s %3s  %s ", "PLAYER", "SCORE", "DATE \n");
+			System.out.println("---------------------------------------");
 			for (Score score : getScoreforGame(getGame())) {
 				index++;
 				sb.append(index + ". " + score.toString());
@@ -64,7 +81,8 @@ public class ScoreServiceImpl implements ScoreService {
 		} catch (ScoreException e) {
 
 			e.printStackTrace();
-		}
+		}				
+		sb.append("\n===========================================\n");
 		return sb.toString();
 	}
 

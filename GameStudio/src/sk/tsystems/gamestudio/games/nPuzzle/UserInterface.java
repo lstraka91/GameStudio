@@ -14,4 +14,6 @@ public interface UserInterface {
 	 * Updates user interface - prints the field.
 	 */
 	public abstract void update();
+	
+	public int getScore();
 }

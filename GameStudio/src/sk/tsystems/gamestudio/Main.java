@@ -1,7 +1,7 @@
 package sk.tsystems.gamestudio;
 
 import sk.tsystems.gamestudio.UI.ConsoleUIGameStudio;
-import sk.tsystems.gamestudio.services.ScoreServiceImpl;
+import sk.tsystems.gamestudio.services.jdbc.ScoreServiceJDBCImpl;
 
 public class Main {
 

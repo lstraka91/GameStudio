@@ -14,9 +14,17 @@ public class ConsoleUI implements UserInterface, Serializable {
 	private Field field;
 	private long startPlayTime;
 	boolean isPlaying;
+	private int score;
 	
+	
+	public void setScore(int score) {
+		this.score = score;
+	}
+
 	public ConsoleUI() {
 	isPlaying=true;
+	score=0;
+	
 	}
 	
 	@Override
@@ -36,8 +44,8 @@ public class ConsoleUI implements UserInterface, Serializable {
 			if (field.getState() == GameState.SOLVED) {
 				update();
 				System.out.println("You win!!");
+				setScore(getPlayingTime());
 				field.getSaveGameFile().delete();
-//				System.exit(0);
 				isPlaying=false;
 			}
 		} while (isPlaying);
@@ -168,6 +176,12 @@ public class ConsoleUI implements UserInterface, Serializable {
 
 	public int getPlayingTime() {
 		return (int) (System.currentTimeMillis() - startPlayTime) / 1000;
+	}
+
+	@Override
+	public int getScore() {
+		
+		return getPlayingTime();
 	}
 
 }

@@ -3,18 +3,27 @@ package sk.tsystems.gamestudio.UI;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 import java.util.List;
 
 import sk.tsystems.gamestudio.UserIntefaceGameStudio;
 import sk.tsystems.gamestudio.entity.Game;
+import sk.tsystems.gamestudio.entity.Score;
+import sk.tsystems.gamestudio.exceptions.GameException;
+import sk.tsystems.gamestudio.exceptions.ScoreException;
 import sk.tsystems.gamestudio.games.guessNumber.GuessNumber;
 import sk.tsystems.gamestudio.games.minesweeper.Minesweeper;
 import sk.tsystems.gamestudio.games.nPuzzle.NPuzzle;
-import sk.tsystems.gamestudio.services.ScoreServiceImpl;
+import sk.tsystems.gamestudio.services.jdbc.GameServiceJDBCImpl;
+import sk.tsystems.gamestudio.services.jdbc.RatingServiceJDBCImpl;
+import sk.tsystems.gamestudio.services.jdbc.ScoreServiceJDBCImpl;
 
 public class ConsoleUIGameStudio implements UserIntefaceGameStudio {
 
 	private List<Game> games;
+	private GameServiceJDBCImpl gameImpl;
+	private ScoreServiceJDBCImpl score;
+	private RatingServiceJDBCImpl rating;
 
 	private enum MenuOption {
 		PLAY, SHOW_HIGH_SCORE, RATING, EXIT
@@ -29,7 +38,9 @@ public class ConsoleUIGameStudio implements UserIntefaceGameStudio {
 	}
 
 	public ConsoleUIGameStudio() {
-
+		gameImpl = new GameServiceJDBCImpl();
+		score = new ScoreServiceJDBCImpl();
+		rating = new RatingServiceJDBCImpl();
 	}
 
 	@Override
@@ -40,6 +51,7 @@ public class ConsoleUIGameStudio implements UserIntefaceGameStudio {
 				playGame();
 				break;
 			case SHOW_HIGH_SCORE:
+				showHighScore();
 				break;
 			case RATING:
 				break;
@@ -86,20 +98,31 @@ public class ConsoleUIGameStudio implements UserIntefaceGameStudio {
 		case 1:
 			Minesweeper mines = new Minesweeper();
 			mines.run();
-			showScore(mines.getClass().getSimpleName());
+			String gameName = mines.getClass().getSimpleName();
+			int ident = findGameIdentByName(gameName);
+			addHighScore(mines.getScore(), 1, ident);
+			showRating(gameName);
+			showScore(gameName);
+
 			break;
 		case 2:
 			NPuzzle nPuzzle = new NPuzzle();
 			nPuzzle.run();
-			showScore(nPuzzle.getClass().getSimpleName());
+			gameName = nPuzzle.getClass().getSimpleName();
+			ident = findGameIdentByName(gameName);
+			addHighScore(nPuzzle.getScore(), 1, ident);
+			showScore(gameName);
 			break;
 
 		case 3:
 			GuessNumber guessNum = new GuessNumber(20);
 			guessNum.run();
-			showScore(guessNum.getClass().getSimpleName());
+			gameName = guessNum.getClass().getSimpleName();
+			ident = findGameIdentByName(gameName);
+			addHighScore(guessNum.getScore(), 1, ident);
+			showScore(gameName);
 			break;
-		case 4: 
+		case 4:
 			return;
 		default:
 			break;
@@ -108,9 +131,14 @@ public class ConsoleUIGameStudio implements UserIntefaceGameStudio {
 	}
 
 	private void showScore(String game) {
-		ScoreServiceImpl score=new ScoreServiceImpl();
+
 		score.setGame(game);
 		System.out.println(score.toString());
+	}
+
+	private void showRating(String game) {
+		rating.setGame(game);
+		System.out.println(rating.toString());
 	}
 
 	/**
@@ -134,6 +162,56 @@ public class ConsoleUIGameStudio implements UserIntefaceGameStudio {
 			return input.readLine();
 		} catch (IOException e) {
 			return null;
+		}
+	}
+
+	/**
+	 * Iterate list of Games and returns ID of finding game or -1 if there is no
+	 * match
+	 * 
+	 * @param gameName
+	 * @return Ident of game from parameter
+	 */
+	private int findGameIdentByName(String gameName) {
+		try {
+			for (Game game : gameImpl.getGameList()) {
+				if (game.getGameName().equals(gameName)) {
+					return game.getIdentGame();
+				}
+			}
+		} catch (GameException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+
+	private void addHighScore(int highScore, int identPlayer, int identGame) {
+
+		if (highScore > 0) {
+			Date date = new Date();
+			try {
+				score.add(new Score(1000 / highScore, identPlayer, identGame,
+						date));
+			} catch (ScoreException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void showHighScore() {
+		try {
+			for (Game game : gameImpl.getGameList()) {
+				System.out
+						.println("===========================================");
+				System.out.println("High score table for game: "
+						+ game.getGameName());
+				System.out
+						.println("===========================================");
+				showScore(game.getGameName());
+			}
+		} catch (GameException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }
