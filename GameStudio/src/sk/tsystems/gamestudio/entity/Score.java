@@ -12,6 +12,9 @@ public class Score {
 	private String gameName;
 	private String playerName;
 	
+	public Score(){
+		
+	}
 	
 	public Score(int score, int identPlayer, int identGame, Date datePlayed,
 			String gameName, String playerName) {

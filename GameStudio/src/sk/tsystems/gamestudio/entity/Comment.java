@@ -1,17 +1,37 @@
 package sk.tsystems.gamestudio.entity;
 
-import java.util.Date;
 
+
+import java.sql.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class Comment {
-
+	@Id
+	@GeneratedValue
+	private int ident;
+	
 	private String comment;
+	private String gameName;
+	private String playerName;
+	
 	private int identPlayer;
 	private int identGame;
 	private Date dateCommented;
 
-	public Comment(String comment, int identPlayer, int identGame,
-			Date dateCommented) {
+	public Comment(){
+		
+	}
+
+	public Comment(int ident, String comment, String gameName,String playerName, int identPlayer, int identGame,Date dateCommented) {
+		
+		this.ident = ident;
 		this.comment = comment;
+		this.gameName = gameName;
+		this.playerName = playerName;
 		this.identPlayer = identPlayer;
 		this.identGame = identGame;
 		this.dateCommented = dateCommented;
@@ -47,6 +67,25 @@ public class Comment {
 
 	public void setDateCommented(Date dateCommented) {
 		this.dateCommented = dateCommented;
+	}
+	
+	public int getIdent() {
+		return ident;
+	}
+	public void setIdent(int ident) {
+		this.ident = ident;
+	}
+	public String getGameName() {
+		return gameName;
+	}
+	public void setGameName(String gameName) {
+		this.gameName = gameName;
+	}
+	public String getPlayerName() {
+		return playerName;
+	}
+	public void setPlayerName(String playerName) {
+		this.playerName = playerName;
 	}
 
 }
