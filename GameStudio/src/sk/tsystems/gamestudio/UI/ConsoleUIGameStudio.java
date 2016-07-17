@@ -5,15 +5,21 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 import sk.tsystems.gamestudio.UserIntefaceGameStudio;
+import sk.tsystems.gamestudio.entity.Comments;
 import sk.tsystems.gamestudio.entity.Game;
+import sk.tsystems.gamestudio.entity.Rating;
 import sk.tsystems.gamestudio.entity.Score;
+import sk.tsystems.gamestudio.exceptions.CommentException;
 import sk.tsystems.gamestudio.exceptions.GameException;
+import sk.tsystems.gamestudio.exceptions.RatingException;
 import sk.tsystems.gamestudio.exceptions.ScoreException;
 import sk.tsystems.gamestudio.games.guessNumber.GuessNumber;
 import sk.tsystems.gamestudio.games.minesweeper.Minesweeper;
 import sk.tsystems.gamestudio.games.nPuzzle.NPuzzle;
+import sk.tsystems.gamestudio.services.jdbc.CommentServiceJDBCImpl;
 import sk.tsystems.gamestudio.services.jdbc.GameServiceJDBCImpl;
 import sk.tsystems.gamestudio.services.jdbc.RatingServiceJDBCImpl;
 import sk.tsystems.gamestudio.services.jdbc.ScoreServiceJDBCImpl;
@@ -24,6 +30,7 @@ public class ConsoleUIGameStudio implements UserIntefaceGameStudio {
 	private GameServiceJDBCImpl gameImpl;
 	private ScoreServiceJDBCImpl score;
 	private RatingServiceJDBCImpl rating;
+	private CommentServiceJDBCImpl comment;
 
 	private enum MenuOption {
 		PLAY, SHOW_HIGH_SCORE, RATING, EXIT
@@ -41,6 +48,7 @@ public class ConsoleUIGameStudio implements UserIntefaceGameStudio {
 		gameImpl = new GameServiceJDBCImpl();
 		score = new ScoreServiceJDBCImpl();
 		rating = new RatingServiceJDBCImpl();
+		comment = new CommentServiceJDBCImpl();
 	}
 
 	@Override
@@ -54,6 +62,7 @@ public class ConsoleUIGameStudio implements UserIntefaceGameStudio {
 				showHighScore();
 				break;
 			case RATING:
+				showRatings();
 				break;
 			case EXIT:
 				return;
@@ -101,9 +110,14 @@ public class ConsoleUIGameStudio implements UserIntefaceGameStudio {
 			String gameName = mines.getClass().getSimpleName();
 			int ident = findGameIdentByName(gameName);
 			addHighScore(mines.getScore(), 1, ident);
+			addRating(1, ident);
+			
 			showRating(gameName);
-			showScore(gameName);
 
+//			showScore(gameName);
+//			addComment(1, ident);
+//			showComments(gameName);
+getAverageRating(gameName);
 			break;
 		case 2:
 			NPuzzle nPuzzle = new NPuzzle();
@@ -111,7 +125,9 @@ public class ConsoleUIGameStudio implements UserIntefaceGameStudio {
 			gameName = nPuzzle.getClass().getSimpleName();
 			ident = findGameIdentByName(gameName);
 			addHighScore(nPuzzle.getScore(), 1, ident);
+			showRating(gameName);
 			showScore(gameName);
+			showComments(gameName);
 			break;
 
 		case 3:
@@ -141,13 +157,17 @@ public class ConsoleUIGameStudio implements UserIntefaceGameStudio {
 		System.out.println(rating.toString());
 	}
 
+	private void showComments(String game) {
+		comment.setGame(game);
+		System.out.println(comment.toString());
+	}
+
 	/**
 	 * In JDK 6 use Console class instead.
 	 * 
 	 * @see readLine()
 	 */
-	private BufferedReader input = new BufferedReader(new InputStreamReader(
-			System.in));
+	private BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 
 	/**
 	 * Reads line from console.
@@ -190,8 +210,7 @@ public class ConsoleUIGameStudio implements UserIntefaceGameStudio {
 		if (highScore > 0) {
 			Date date = new Date();
 			try {
-				score.add(new Score(1000 / highScore, identPlayer, identGame,
-						date));
+				score.add(new Score(1000 / highScore, identPlayer, identGame, date));
 			} catch (ScoreException e) {
 				e.printStackTrace();
 			}
@@ -201,17 +220,104 @@ public class ConsoleUIGameStudio implements UserIntefaceGameStudio {
 	private void showHighScore() {
 		try {
 			for (Game game : gameImpl.getGameList()) {
-				System.out
-						.println("===========================================");
-				System.out.println("High score table for game: "
-						+ game.getGameName());
-				System.out
-						.println("===========================================");
+				System.out.println("===========================================");
+				System.out.println("High score table for game: " + game.getGameName());
+				System.out.println("===========================================");
 				showScore(game.getGameName());
 			}
 		} catch (GameException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	private void showRatings() {
+		try {
+			for (Game game : gameImpl.getGameList()) {
+				System.out.println("===========================================");
+				System.out.println("RATING table for game: " + game.getGameName());
+				System.out.println("===========================================");
+				showRating(game.getGameName());
+			}
+		} catch (GameException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void addRating(int identPlayer, int identGame) {
+		System.out.println("Enter rating 1-5");
+		Scanner ratingScanner = new Scanner(System.in);
+		if(ratingScanner.hasNextInt()){
+			int rating=ratingScanner.nextInt();
+		if (rating > 0 && rating <= 5) {
+			Date date = new Date();
+			try {
+				
+				this.rating.add(new Rating(identGame, identPlayer, rating, date));
+			} catch (RatingException e) {
+				e.printStackTrace();
+			}
+		}
+		}else{
+			System.out.println("You enter wrong rating!! Input 1-5!!!");
+		}
+	}
+	private void getAverageRating(String gameName){
+		try {
+			rating.averageRate(gameName);
+			System.out.printf("%s, %s \n","Count of Ratings", "Average Rating");
+			System.out.printf("     %2d ,      %f \n", this.rating.getCountOfRatings(),this.rating.getAvgRating());
+//			System.out.println(rating.getAvgRating());
+		} catch (RatingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	private boolean doYouWant() {
+		System.out.println("Type y/n");
+		boolean condition=true;
+		Scanner scan = new Scanner(System.in);
+		do {
+		
+		if (scan.hasNext("y|Y")) {
+			condition=false;
+			//scan.close();
+			return true;
+		} else if (scan.hasNext("n|N")) {
+			condition=false;
+			//scan.close();
+			return false;
+
+		} else {
+			System.out.println("Bad input..type Y/N");
+			scan=new Scanner(System.in);
+			
+			
+		}
+		} while (condition);
+		//scan.close();
+		return false;
+	}
+
+	private void addComment(int identPlayer, int identGame) {
+		Date date = new Date();
+		if (doYouWant()==true) {
+
+			System.out.println("Enter the comment: ");
+			Scanner read = new Scanner(System.in);
+			String userComment = read.nextLine();
+			
+			try {
+				this.comment.add(new Comments(userComment, identPlayer, identGame, new java.sql.Date(date.getTime())));
+				//read.close();
+			} catch (CommentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 	}
 }

@@ -21,6 +21,13 @@ public class Rating {
 		this.playerName = playerName;
 		this.gameName = gameName;
 	}
+	
+	public Rating(int identGame, int identPlayer, int rating, Date dateRated){
+		this.identGame = identGame;
+		this.identPlayer = identPlayer;
+		this.rating = rating;
+		this.dateRated = dateRated;
+	}
 
 	public String getPlayerName() {
 		return playerName;

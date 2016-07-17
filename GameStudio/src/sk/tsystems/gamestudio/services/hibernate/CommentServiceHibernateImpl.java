@@ -7,7 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import sk.ness.jpa.JpaHelper;
-import sk.tsystems.gamestudio.entity.Comment;
+import sk.tsystems.gamestudio.entity.Comments;
 import sk.tsystems.gamestudio.entity.Commentos;
 import sk.tsystems.gamestudio.exceptions.CommentException;
 import sk.tsystems.gamestudio.services.CommentService;

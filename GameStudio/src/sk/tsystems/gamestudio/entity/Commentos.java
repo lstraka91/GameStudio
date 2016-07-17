@@ -11,7 +11,7 @@ public class Commentos {
 	@GeneratedValue
 	private int ident;
 
-	private String comment;
+	private String userComment;
 	private String gameName;
 	private String playerName;
 	
@@ -23,10 +23,10 @@ public class Commentos {
 		this.ident = ident;
 	}
 	public String getComment() {
-		return comment;
+		return userComment;
 	}
 	public void setComment(String comment) {
-		this.comment = comment;
+		this.userComment = comment;
 	}
 	public String getGameName() {
 		return gameName;

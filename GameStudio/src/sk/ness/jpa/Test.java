@@ -2,14 +2,7 @@ package sk.ness.jpa;
 
 
 
-import java.sql.Date;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
-import sk.tsystems.gamestudio.entity.Comment;
 import sk.tsystems.gamestudio.entity.Commentos;
-import sk.tsystems.gamestudio.entity.Score;
 import sk.tsystems.gamestudio.services.hibernate.CommentServiceHibernateImpl;
 
 public class Test {
