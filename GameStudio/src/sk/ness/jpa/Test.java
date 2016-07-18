@@ -60,7 +60,7 @@ public class Test {
 		Skore sk = new Skore();
 		Hrac h = new Hrac();
 		h.setName("Gejza");
-		hracImpl.insertNewHrac(h);
+//		hracImpl.insertNewHrac(h);
 //		sk.setSkore(4578);
 //		sk.setHra(hra);
 //		sk.setHrac(hrac);
@@ -69,13 +69,13 @@ public class Test {
 		RejtingId rid = new RejtingId();
 		rid.setHra(hra.getIdent());
 		rid.setHrac(hrac.getId());
-//		rejt.setHra(hra);
-//		rejt.setHrac(hrac);
-		rejt.setRejting(4);
+////		rejt.setHra(hra);
+////		rejt.setHrac(hrac);
+		rejt.setRejting(2);
 		rejt.setRajtId(rid);
-		rejting.add(rejt);
+//		rejting.add(rejt);
 //		
-//		
+		rejting.getAverageRatingAndCount(rejt);
 		
 //		Commentos com = new Commentos();
 //		com.setUserComment("hihihi");
