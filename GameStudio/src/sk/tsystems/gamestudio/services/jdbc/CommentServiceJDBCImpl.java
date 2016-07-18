@@ -64,7 +64,7 @@ public class CommentServiceJDBCImpl implements CommentService {
 		StringBuilder sb = new StringBuilder();
 		int index = 0;
 		try {
-			System.out.println("======COMMENTS======");
+			System.out.println("===========COMMENTS===========");
 			for (Comments comment : findCommentForGame(getGame())) {
 				index++;
 				sb.append(index + ". " + comment.toString());

@@ -1,12 +1,13 @@
 package sk.tsystems.gamestudio.games.minesweeper;
 
+import sk.tsystems.gamestudio.games.GameInterface;
 import sk.tsystems.gamestudio.games.minesweeper.consoleui.ConsoleUI;
 import sk.tsystems.gamestudio.games.minesweeper.core.Field;
 
 /**
  * Main application class.
  */
-public class Minesweeper implements Runnable {
+public class Minesweeper implements Runnable, GameInterface {
 	/** User interface. */
 	private UserInterface userInterface;
 	private long startMillis;
@@ -15,6 +16,7 @@ public class Minesweeper implements Runnable {
 	private Field field;
 	private int score;
 
+	@Override
 	public int getScore() {
 		return score;
 	}

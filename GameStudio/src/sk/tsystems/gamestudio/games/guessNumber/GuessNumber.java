@@ -3,7 +3,9 @@ package sk.tsystems.gamestudio.games.guessNumber;
 import java.util.Random;
 import java.util.Scanner;
 
-public class GuessNumber implements GuessNumberInterface, Runnable {
+import sk.tsystems.gamestudio.games.GameInterface;
+
+public class GuessNumber implements GuessNumberInterface, Runnable, GameInterface {
 	private int toGuess;
 	private int turns;
 	private boolean guessed;
@@ -11,6 +13,7 @@ public class GuessNumber implements GuessNumberInterface, Runnable {
 	private long startMillis;
 	private int score;
 
+	@Override
 	public int getScore() {
 		return score;
 	}

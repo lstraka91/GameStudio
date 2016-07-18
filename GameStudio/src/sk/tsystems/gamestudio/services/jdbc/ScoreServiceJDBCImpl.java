@@ -67,6 +67,7 @@ public class ScoreServiceJDBCImpl implements ScoreService {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		int index = 0;
+		System.out.println("========TABLE HIGH SCORE========");
 		try {
 			System.out.printf("   %-10s %3s  %s ", "PLAYER", "SCORE", "DATE \n");
 			System.out.println("---------------------------------------");
