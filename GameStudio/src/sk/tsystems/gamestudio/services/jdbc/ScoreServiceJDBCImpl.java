@@ -14,7 +14,7 @@ import sk.tsystems.gamestudio.services.ScoreService;
 
 public class ScoreServiceJDBCImpl implements ScoreService {
 	private String game;
-	private final String SELECT_SCORE = "select s.SCORE,s.ID_USER, s.ID_GAME,s.DATE_PLAYED,g.name, p.NAME from score s join game g on s.ID_GAME = g.ID_GAME join player p on s.ID_USER = p.ID_USER WHERE g.name like ? ORDER BY s.score DESC ";
+	private final String SELECT_SCORE = "select s.SCORE,s.ID_USER, s.ID_GAME,s.DATE_PLAYED,g.name, p.NAME from score s join game g on s.ID_GAME = g.ID_GAME join player p on s.ID_USER = p.ID_USER WHERE g.name like ? AND rownum <= 10  ORDER BY s.score DESC ";
 	private final String INSERT_INTO_SCORE = "insert into SCORE (ID_USER,ID_GAME, score, date_played)	values(?, ?, ?, ? )";
 
 	public ScoreServiceJDBCImpl() {

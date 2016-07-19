@@ -1,13 +1,7 @@
 package sk.tsystems.gamestudio.entity;
 
-import java.io.Serializable;
-
-import javax.persistence.CascadeType;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
 @Entity
 public class Rejting  {

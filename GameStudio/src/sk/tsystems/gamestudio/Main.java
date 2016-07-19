@@ -1,6 +1,7 @@
 package sk.tsystems.gamestudio;
 
-import sk.tsystems.gamestudio.UI.ConsoleUIGameStudio;
+import sk.tsystems.gamestudio.UI.ConsoleUI_JDBC;
+import sk.tsystems.gamestudio.UI.ConsoleUIHibernate;
 import sk.tsystems.gamestudio.services.jdbc.ScoreServiceJDBCImpl;
 
 public class Main {
@@ -13,11 +14,11 @@ public class Main {
 //		g.addGame(new Game(2, "nPuzzle"));
 //		g.addGame(new Game(3, "Guess The Number"));
 //		UserIntefaceGameStudio ui = new ConsoleUIGameStudio(g);
-		UserIntefaceGameStudio ui = new ConsoleUIGameStudio();
+		UserIntefaceGameStudio ui = new GameStudioConsoleUI(new ConsoleUIHibernate());
+//		UserIntefaceGameStudio ui = new GameStudioConsoleUI(new ConsoleUI_JDBC());
 		ui.run();
 
-//		ScoreServiceImpl serv = new ScoreServiceImpl();
-//		System.out.println(serv.toString());
+
 		
 	}
 

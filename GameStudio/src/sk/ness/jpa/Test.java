@@ -55,7 +55,7 @@ public class Test {
 		HracServiceHibernateImpl hracImpl = new HracServiceHibernateImpl();
 		HraServiceHibernateImpl gameImpl= new HraServiceHibernateImpl();
 		
-		Hra hra = new HraServiceHibernateImpl().getGame("guessNumber");
+		Hra hra = new HraServiceHibernateImpl().getGameFromDB("guessNumber");
 		Hrac hrac = new HracServiceHibernateImpl().getHracFromDB("Valibuk");
 		Skore sk = new Skore();
 		Hrac h = new Hrac();

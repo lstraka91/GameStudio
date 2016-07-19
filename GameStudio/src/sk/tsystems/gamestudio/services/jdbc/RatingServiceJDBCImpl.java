@@ -143,7 +143,7 @@ public class RatingServiceJDBCImpl implements RatingService {
 		// return rating;
 	}
 
-	public int playerRating(int identPlayer, int identGame)
+	public int selectPlayerRating(int identPlayer, int identGame)
 			throws RatingException {
 		try (Connection connection = DriverManager.getConnection(
 				DatabaseSetting.URL, DatabaseSetting.USER,

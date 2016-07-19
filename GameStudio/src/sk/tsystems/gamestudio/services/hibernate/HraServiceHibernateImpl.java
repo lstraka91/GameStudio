@@ -7,7 +7,7 @@ import sk.tsystems.gamestudio.entity.Hra;
 
 public class HraServiceHibernateImpl {
 	
-	public Hra getGame(String gameName) {
+	public Hra getGameFromDB(String gameName) {
 		JpaHelper.beginTransaction();
 		EntityManager em = JpaHelper.getEntityManager();
 		JpaHelper.commitTransaction();
@@ -16,5 +16,12 @@ public class HraServiceHibernateImpl {
 				.setParameter("gameName", gameName).getSingleResult();
 
 		return game;
+	}
+	
+	public void addGame(Hra game){
+		JpaHelper.beginTransaction();
+		EntityManager em = JpaHelper.getEntityManager();
+		em.persist(game);
+		JpaHelper.commitTransaction();
 	}
 }
