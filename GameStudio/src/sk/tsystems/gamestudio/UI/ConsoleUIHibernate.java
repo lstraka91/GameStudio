@@ -8,7 +8,7 @@ import java.util.Scanner;
 import sk.tsystems.gamestudio.ServiceInterface;
 import sk.tsystems.gamestudio.entity.Comment;
 import sk.tsystems.gamestudio.entity.Game;
-import sk.tsystems.gamestudio.entity.Hrac;
+import sk.tsystems.gamestudio.entity.Player;
 import sk.tsystems.gamestudio.entity.Rejting;
 import sk.tsystems.gamestudio.entity.RatingId;
 import sk.tsystems.gamestudio.entity.Skore;
@@ -29,7 +29,7 @@ public class ConsoleUIHibernate implements ServiceInterface {
 	HraServiceHibernateImpl gameImpl;
 	CommentServiceHibernateImpl commentImpl;
 	Game game;
-	Hrac player;
+	Player player;
 
 	public ConsoleUIHibernate() {
 		skoreImpl = new SkoreServiceHibernateImpl();
@@ -38,7 +38,7 @@ public class ConsoleUIHibernate implements ServiceInterface {
 		gameImpl = new HraServiceHibernateImpl();
 		commentImpl = new CommentServiceHibernateImpl();
 		game = new Game();
-		player = new Hrac();
+		player = new Player();
 	}
 
 	public void startGame(GameInterface gameIntrfc) {
@@ -70,8 +70,8 @@ public class ConsoleUIHibernate implements ServiceInterface {
 			for (Skore skore : scoreList) {
 				index++;
 				System.out.print(index + ". ");
-				System.out.printf("%-10s %3d \n", skore.getHrac().getName(),
-						skore.getSkore());
+				System.out.printf("%-10s %3d \n", skore.getPlayer().getName(),
+						skore.getScore());
 			}
 			if (index == 0) {
 				System.out.println("There is no High Score yet!");
@@ -88,9 +88,9 @@ public class ConsoleUIHibernate implements ServiceInterface {
 		if (highScore > 0) {
 			game = gameImpl.getGameByName(gameName);
 			player = playerImpl.getHracFromDB(playerName);
-			skore.setHra(game);
-			skore.setHrac(player);
-			skore.setSkore(1000 / highScore);
+			skore.setGame(game);
+			skore.setPlayer(player);
+			skore.setScore(1000 / highScore);
 			try {
 				skoreImpl.add(skore);
 			} catch (ScoreException e) {
@@ -130,7 +130,7 @@ public class ConsoleUIHibernate implements ServiceInterface {
 		System.out.println("Do you want to add the rating? ");
 		if (doYouWant()) {
 			Game game = getGame(gameName);
-			Hrac player = getPlayer(playerName);
+			Player player = getPlayer(playerName);
 
 			System.out.println("Enter rating 1-5");
 			Scanner ratingScanner = new Scanner(System.in);
@@ -155,7 +155,7 @@ public class ConsoleUIHibernate implements ServiceInterface {
 		}
 	}
 
-	private Hrac getPlayer(String playerName) {
+	private Player getPlayer(String playerName) {
 		return new HracServiceHibernateImpl().getHracFromDB(playerName);
 	}
 
@@ -174,7 +174,7 @@ public class ConsoleUIHibernate implements ServiceInterface {
 		for (Comment comment : commentList) {
 			index++;
 			System.out.printf("%1d, %5s, %s, %s \n", index,
-					comment.getDateCommented(), comment.getHrac().getName(),
+					comment.getDateCommented(), comment.getPlayer().getName(),
 					comment.getUserComment());
 			// System.out.println(index + ". " + comment.getHrac().getName() +
 			// " "+ comment.getUserComment()+" "+comment.getDateCommented());
@@ -188,8 +188,8 @@ public class ConsoleUIHibernate implements ServiceInterface {
 		if (doYouWant() == true) {
 
 			Comment comment = new Comment();
-			comment.setHra(getGame(gameName));
-			comment.setHrac(getPlayer(playerName));
+			comment.setGame(getGame(gameName));
+			comment.setPlayer(getPlayer(playerName));
 			comment.setDateCommented(new Date());
 			System.out.println("Enter the comment: ");
 			Scanner read = new Scanner(System.in);

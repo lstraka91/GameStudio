@@ -3,22 +3,22 @@ package sk.tsystems.gamestudio.services.hibernate;
 import javax.persistence.EntityManager;
 
 import sk.ness.jpa.JpaHelper;
-import sk.tsystems.gamestudio.entity.Hrac;
+import sk.tsystems.gamestudio.entity.Player;
 
 public class HracServiceHibernateImpl {
 
-	public void insertNewHrac(Hrac hrac){
+	public void insertNewHrac(Player hrac){
 		JpaHelper.beginTransaction();
 		EntityManager em = JpaHelper.getEntityManager();
 		em.persist(hrac);
 		JpaHelper.commitTransaction();
 	}
 	
-	public Hrac getHracFromDB(String name){
+	public Player getHracFromDB(String name){
 		 JpaHelper.beginTransaction();
 		 EntityManager em = JpaHelper.getEntityManager();
 		 JpaHelper.commitTransaction();
-		 Hrac hrac = (Hrac) em.createQuery("Select h from Hrac h where h.name=:name").setParameter("name", name).getSingleResult();
+		 Player hrac = (Player) em.createQuery("Select h from Hrac h where h.name=:name").setParameter("name", name).getSingleResult();
 	
 		 return hrac;
 	}

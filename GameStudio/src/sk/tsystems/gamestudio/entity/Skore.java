@@ -1,10 +1,16 @@
 package sk.tsystems.gamestudio.entity;
 
+import java.util.Date;
+
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 @Entity
 
@@ -13,34 +19,57 @@ public class Skore {
 	@GeneratedValue
 	private int id;
 
-	private int skore;
+	private int score;
 	@ManyToOne(cascade = CascadeType.ALL)
 	private Game game;
 	@ManyToOne(cascade = CascadeType.ALL)
-	private Hrac hrac;
-
-	public int getSkore() {
-		return skore;
+	private Player player;
+	@Temporal(TemporalType.DATE)
+	@Column(name="date_played")
+	private Date date;
+	@Transient
+	private String gameName;
+	@Transient
+	private String playerName;
+	
+	
+	public String getGameName() {
+		return gameName;
 	}
-
-	public void setSkore(int skore) {
-		this.skore = skore;
+	public void setGameName(String gameName) {
+		this.gameName = gameName;
 	}
-
-	public Game getHra() {
+	public String getPlayerName() {
+		return playerName;
+	}
+	public void setPlayerName(String playerName) {
+		this.playerName = playerName;
+	}
+	public int getScore() {
+		return score;
+	}
+	public void setScore(int score) {
+		this.score = score;
+	}
+	public Game getGame() {
 		return game;
 	}
-
-	public void setHra(Game hra) {
-		this.game = hra;
+	public void setGame(Game game) {
+		this.game = game;
 	}
-
-	public Hrac getHrac() {
-		return hrac;
+	public Player getPlayer() {
+		return player;
 	}
-
-	public void setHrac(Hrac hrac) {
-		this.hrac = hrac;
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
+		this.date = date;
+	}
+	
+	
 
 }

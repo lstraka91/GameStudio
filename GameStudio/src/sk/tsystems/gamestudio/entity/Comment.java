@@ -1,6 +1,7 @@
 package sk.tsystems.gamestudio.entity;
 
 import java.util.Date;
+import java.util.Formatter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -29,9 +30,9 @@ public class Comment {
 	private String playerName;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
-	private Game hra;
+	private Game game;
 	@ManyToOne(cascade = CascadeType.ALL)
-	private Hrac hrac;
+	private Player player;
 	
 	@Temporal(TemporalType.DATE)
 	@Column(name="date_comment")
@@ -39,11 +40,11 @@ public class Comment {
 	
 	
 	
-	public Comment( String userComment, Game hra, Hrac hrac) {
+	public Comment( String userComment, Game game, Player player) {
 		
 		this.userComment = userComment;
-		this.hra = hra;
-		this.hrac = hrac;
+		this.game = game;
+		this.player = player;
 	}
 	
 	public Comment(){
@@ -96,18 +97,27 @@ public Date getDateCommented() {
 //	public void setIdentGame(int identGame) {
 //		this.id_game = identGame;
 //	}
-	public Game getHra() {
-		return hra;
+	public Game getGame() {
+		return game;
 	}
-	public void setHra(Game game) {
-		this.hra = game;
+	public void setGame(Game game) {
+		this.game = game;
 	}
-	public Hrac getHrac() {
-		return hrac;
+	public Player getPlayer() {
+		return player;
 	}
-	public void setHrac(Hrac hrac) {
-		this.hrac = hrac;
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
-	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		Formatter formatter = new Formatter();
+
+		sb.append(formatter.format("%td.%tm.%ty %-10s %s ", getDateCommented(), getDateCommented(), getDateCommented(),
+				getPlayerName(), getUserComment()));
+		sb.append("\n");
+		formatter.close();
+		return sb.toString();
+	}
 	
 }

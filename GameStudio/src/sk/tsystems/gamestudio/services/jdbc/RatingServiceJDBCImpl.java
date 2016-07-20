@@ -8,7 +8,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import sk.tsystems.gamestudio.entity.Rating;
+import sk.tsystems.gamestudio.entity.Game;
+import sk.tsystems.gamestudio.entity.Player;
+import sk.tsystems.gamestudio.entity.Rejting;
 import sk.tsystems.gamestudio.exceptions.RatingException;
 import sk.tsystems.gamestudio.services.RatingService;
 
@@ -56,16 +58,16 @@ public class RatingServiceJDBCImpl implements RatingService {
 	}
 
 	@Override
-	public void add(Rating rating) throws RatingException {
+	public void add(Rejting rating) throws RatingException {
 		try (Connection connection = DriverManager.getConnection(
 				DatabaseSetting.URL, DatabaseSetting.USER,
 				DatabaseSetting.PASSWORD);
 				PreparedStatement ps = connection
 						.prepareStatement(INSERT_INTO_RATING)) {
-			ps.setInt(1, rating.getIdentPlayer());
-			ps.setInt(2, rating.getIdentGame());
+			ps.setInt(1, rating.getRatingId().getPlayer());
+			ps.setInt(2, rating.getRatingId().getGameId());
 			ps.setInt(3, rating.getRating());
-			ps.setDate(4, new java.sql.Date(rating.getDateRated().getTime()));
+			ps.setDate(4, new java.sql.Date(rating.getRateDate().getTime()));
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			throw new RatingException("Error saving rating", e);
@@ -74,28 +76,30 @@ public class RatingServiceJDBCImpl implements RatingService {
 	}
 
 	@Override
-	public List<Rating> findRatingForGame(String game) throws RatingException {
-		List<Rating> ratings = new ArrayList<>();
+	public List<Rejting> findRatingForGame(String game) throws RatingException {
+		List<Rejting> ratingsList = new ArrayList<>();
 
-		try (Connection connection = DriverManager.getConnection(
-				DatabaseSetting.URL, DatabaseSetting.USER,
-				DatabaseSetting.PASSWORD);
-				PreparedStatement ps = connection
-						.prepareStatement(SELECT_RATING_ON_GAME)) {
-			ps.setString(1, game);
-			try (ResultSet rs = ps.executeQuery()) {
-				while (rs.next()) {
-					Rating rating = new Rating(rs.getInt(1), rs.getInt(2),
-							rs.getInt(3), rs.getDate(4), rs.getString(5),
-							rs.getString(6));
-					ratings.add(rating);
-				}
-			}
-		} catch (SQLException e) {
-			throw new RatingException("Error loading ratings", e);
-		}
+//		try (Connection connection = DriverManager.getConnection(
+//				DatabaseSetting.URL, DatabaseSetting.USER,
+//				DatabaseSetting.PASSWORD);
+//				PreparedStatement ps = connection
+//						.prepareStatement(SELECT_RATING_ON_GAME)) {
+//			ps.setString(1, game);
+//			try (ResultSet rs = ps.executeQuery()) {
+//				while (rs.next()) {
+//					Rejting rating = new Rejting();
+//					rating.set
+//					(rs.getInt(1), rs.getInt(2),
+//							rs.getInt(3), rs.getDate(4), rs.getString(5),
+//							rs.getString(6));
+//					ratingsList.add(rating);
+//				}
+//			}
+//		} catch (SQLException e) {
+//			throw new RatingException("Error loading ratings", e);
+//		}
 
-		return ratings;
+		return ratingsList;
 	}
 
 	public String toString() {
@@ -104,7 +108,7 @@ public class RatingServiceJDBCImpl implements RatingService {
 		try {
 			System.out.printf("   %-10s %3s  %s ", "PLAYER", "RATE", "DATE \n");
 			System.out.println("---------------------------------------");
-			for (Rating rating : findRatingForGame(getGame())) {
+			for (Rejting rating : findRatingForGame(getGame())) {
 				index++;
 				sb.append(index + ". " + rating.toString());
 
@@ -121,7 +125,7 @@ public class RatingServiceJDBCImpl implements RatingService {
 	}
 
 	public void averageRate(String game) throws RatingException {
-		Rating rating = null;
+		Rejting rating = null;
 		try (Connection connection = DriverManager.getConnection(
 				DatabaseSetting.URL, DatabaseSetting.USER,
 				DatabaseSetting.PASSWORD);
@@ -143,15 +147,15 @@ public class RatingServiceJDBCImpl implements RatingService {
 		// return rating;
 	}
 
-	public int selectPlayerRating(int identPlayer, int identGame)
+	public int selectPlayerRating(Player player, Game game)
 			throws RatingException {
 		try (Connection connection = DriverManager.getConnection(
 				DatabaseSetting.URL, DatabaseSetting.USER,
 				DatabaseSetting.PASSWORD);
 				PreparedStatement ps = connection
 						.prepareStatement(SELECT_PLAYER_RATING)) {
-			ps.setInt(1, identPlayer);
-			ps.setInt(2, identGame);
+			ps.setInt(1, player.getId());
+			ps.setInt(2, game.getIdentGame());
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
 					setPlayerRate(rs.getInt(1));
@@ -164,14 +168,14 @@ public class RatingServiceJDBCImpl implements RatingService {
 		return -1;
 	}
 	
-	public void deleteRating(int identPlayer, int identGame)throws RatingException{
+	public void deleteRating(Player player, Game game)throws RatingException{
 		try (Connection connection = DriverManager.getConnection(
 				DatabaseSetting.URL, DatabaseSetting.USER,
 				DatabaseSetting.PASSWORD);
 				PreparedStatement ps = connection
 						.prepareStatement(DELETE_RATING)) {
-			ps.setInt(1, identPlayer);
-			ps.setInt(2, identGame);
+			ps.setInt(1, player.getId());
+			ps.setInt(2, game.getIdentGame());
 			try (ResultSet rs = ps.executeQuery()) {
 				
 			}
@@ -179,6 +183,8 @@ public class RatingServiceJDBCImpl implements RatingService {
 			throw new RatingException("Error delete rating", e);
 		}
 	}
+
+
 	
 
 }

@@ -5,7 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class Hrac {
+public class Player {
 	@Id
 	@GeneratedValue
 	private int id;

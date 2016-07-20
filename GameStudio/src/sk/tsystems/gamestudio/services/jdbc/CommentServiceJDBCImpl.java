@@ -8,22 +8,24 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import sk.tsystems.gamestudio.entity.Comment;
 import sk.tsystems.gamestudio.entity.Comments;
 import sk.tsystems.gamestudio.exceptions.CommentException;
 import sk.tsystems.gamestudio.services.CommentService;
+import sk.tsystems.gamestudio.services.CommentosService;
 
-public class CommentServiceJDBCImpl implements CommentService {
+public class CommentServiceJDBCImpl implements CommentosService {
 	private String game;
-	private final String SELECT_COMMENTS = "select c.comments,g.name, p.NAME,c.DATE_COMMENT,g.name, p.NAME from comments c join game g on c.ID_GAME = g.ID_GAME join player p on c.ID_USER = p.ID_USER WHERE g.name like ?";
-	private final String INSERT_INTO_COMMENTS = "insert into COMMENTS (ID_USER,ID_GAME, comments, date_comment)	values(?, ?, ?, ? )";
+	private final String SELECT_COMMENTS = "select c.comments,g.name, p.NAME,c.DATE_COMMENT from comments c join game g on c.ID_GAME = g.ID_GAME join player p on c.ID_USER = p.ID_USER WHERE g.name like ?";
+	private final String INSERT_INTO_COMMENTS = "insert into COMMENTS (player_id,ID_GAME, comments, date_comment)	values(?, ?, ?, ? )";
 
 	@Override
-	public void add(Comments comment) throws CommentException {
+	public void add(Comment comment) throws CommentException {
 		try (Connection connection = DriverManager.getConnection(DatabaseSetting.URL, DatabaseSetting.USER,
 				DatabaseSetting.PASSWORD); PreparedStatement ps = connection.prepareStatement(INSERT_INTO_COMMENTS)) {
-			ps.setInt(1, comment.getIdentPlayer());
-			ps.setInt(2, comment.getIdentGame());
-			ps.setString(3, comment.getComment());
+			ps.setInt(1, comment.getPlayer().getId());
+			ps.setInt(2, comment.getGame().getIdentGame());
+			ps.setString(3, comment.getUserComment());
 			ps.setDate(4, new java.sql.Date(comment.getDateCommented().getTime()));
 			ps.executeUpdate();
 		} catch (SQLException e) {
@@ -33,23 +35,28 @@ public class CommentServiceJDBCImpl implements CommentService {
 	}
 
 	@Override
-	public List<Comments> findCommentForGame(String game) throws CommentException {
-		List<Comments> comments = new ArrayList<>();
+	public List<Comment> findCommentForGame(String game) throws CommentException {
+		List<Comment> commentList = new ArrayList<>();
 
 		try (Connection connection = DriverManager.getConnection(DatabaseSetting.URL, DatabaseSetting.USER,
 				DatabaseSetting.PASSWORD); PreparedStatement ps = connection.prepareStatement(SELECT_COMMENTS)) {
 			ps.setString(1, game);
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
-					Comments comment = new Comments(rs.getString(1), rs.getString(2), rs.getString(3), rs.getDate(4));
-					comments.add(comment);
+					Comment comment =new Comment();
+					comment.setUserComment(rs.getString(1));
+					comment.setGameName(rs.getString(2));
+					comment.setPlayerName(rs.getString(3));
+					comment.setDateCommented(rs.getDate(4));
+							
+					commentList.add(comment);
 				}
 			}
 		} catch (SQLException e) {
 			throw new CommentException("Error loading comments", e);
 		}
 
-		return comments;
+		return commentList;
 	}
 
 	public String getGame() {
@@ -65,7 +72,7 @@ public class CommentServiceJDBCImpl implements CommentService {
 		int index = 0;
 		try {
 			System.out.println("===========COMMENTS===========");
-			for (Comments comment : findCommentForGame(getGame())) {
+			for (Comment comment : findCommentForGame(getGame())) {
 				index++;
 				sb.append(index + ". " + comment.toString());
 			}
