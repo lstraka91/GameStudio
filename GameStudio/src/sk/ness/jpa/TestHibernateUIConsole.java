@@ -1,9 +1,7 @@
 package sk.ness.jpa;
 
 import sk.tsystems.gamestudio.UI.ConsoleUIHibernate;
-import sk.tsystems.gamestudio.entity.Hra;
 import sk.tsystems.gamestudio.games.guessNumber.GuessNumber;
-import sk.tsystems.gamestudio.games.minesweeper.Minesweeper;
 import sk.tsystems.gamestudio.services.hibernate.HraServiceHibernateImpl;
 
 public class TestHibernateUIConsole {

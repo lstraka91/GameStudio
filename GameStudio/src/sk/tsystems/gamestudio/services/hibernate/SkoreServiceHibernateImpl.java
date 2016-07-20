@@ -25,7 +25,7 @@ public class SkoreServiceHibernateImpl implements SkoreService{
 		 JpaHelper.beginTransaction();
 		 EntityManager em = JpaHelper.getEntityManager();
 		 JpaHelper.commitTransaction();
-		 return em.createQuery("Select s from Skore s JOIN s.hra h where h.gameName=:gameName order by s.skore desc").setParameter("gameName", game).getResultList();
+		 return em.createQuery("Select s from Skore s JOIN s.game h where h.name=:gameName order by s.skore desc").setParameter("gameName", game).getResultList();
 	}
 
 }

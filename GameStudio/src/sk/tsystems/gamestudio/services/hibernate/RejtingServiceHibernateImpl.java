@@ -62,7 +62,7 @@ public class RejtingServiceHibernateImpl implements RejtingService {
 		JpaHelper.commitTransaction();
 		ArrayList<Rejting> rejtList = (ArrayList<Rejting>) em
 				.createQuery("Select r from Rejting r where r.rajtId=:rajt ")
-				.setParameter("rajt", rejting.getRajtId()).getResultList();
+				.setParameter("rajt", rejting.getRatingId()).getResultList();
 		System.out.println(rejtList);
 		System.out.println(rejtList.size());
 		return rejtList.size();
@@ -73,8 +73,8 @@ public class RejtingServiceHibernateImpl implements RejtingService {
 		EntityTransaction updt = em.getTransaction();
 		updt.begin();
 		em.createQuery("update Rejting set rejting=:rejt where rajtId=:rajt")
-				.setParameter("rejt", rejting.getRejting())
-				.setParameter("rajt", rejting.getRajtId()).executeUpdate();
+				.setParameter("rejt", rejting.getRating())
+				.setParameter("rajt", rejting.getRatingId()).executeUpdate();
 		updt.commit();
 	}
 
@@ -83,16 +83,16 @@ public class RejtingServiceHibernateImpl implements RejtingService {
 		EntityManager em = JpaHelper.getEntityManager();
 		List<Long> countList = em
 				.createQuery(
-						"select COUNT(*) from Rejting r join r.rajtId h  where h.hra=:gameName group by h.hra")
-				.setParameter("gameName", rejting.getRajtId().getHra())
+						"select COUNT(*) from Rejting r join r.ratingId h  where h.game=:gameName group by h.hra")
+				.setParameter("gameName", rejting.getRatingId().getGameId())
 				.getResultList();
 		JpaHelper.commitTransaction();
 
 		JpaHelper.beginTransaction();
 		List<Double> avgList = em
 				.createQuery(
-						"select round(avg(r.rejting),2) from Rejting r join r.rajtId h  where h.hra=:gameName group by h.hra")
-				.setParameter("gameName", rejting.getRajtId().getHra())
+						"select round(avg(r.rejting),2) from Rejting r join r.ratingId h  where h.game=:gameName group by h.hra")
+				.setParameter("gameName", rejting.getRatingId().getGameId())
 				.getResultList();
 		JpaHelper.commitTransaction();
 		double avg = 0;

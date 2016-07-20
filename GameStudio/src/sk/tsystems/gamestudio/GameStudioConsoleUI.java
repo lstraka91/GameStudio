@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 
+
+import sk.ness.jpa.JpaHelper;
 import sk.tsystems.gamestudio.games.guessNumber.GuessNumber;
 import sk.tsystems.gamestudio.games.minesweeper.Minesweeper;
 import sk.tsystems.gamestudio.games.nPuzzle.NPuzzle;
@@ -39,6 +41,7 @@ public class GameStudioConsoleUI implements UserIntefaceGameStudio{
 				//showRatings();
 				break;
 			case EXIT:
+				JpaHelper.closeAll();
 				return;
 			}
 		}

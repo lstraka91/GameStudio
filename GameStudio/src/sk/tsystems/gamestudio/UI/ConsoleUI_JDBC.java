@@ -47,12 +47,21 @@ public class ConsoleUI_JDBC implements ServiceInterface {
 		String gameName = game.getClass().getSimpleName();
 		showScore(gameName);
 		game.run();
-		int identGame = findGameIdentByName(gameName);
-		addHighScore(game.getScore(), 1, identGame);
-		getAverageRating(gameName);
-		addRating(1, identGame);
-		addComment(1, identGame);
+		try {
+			addHighScore(game.getScore(), 1, getGameIdentByName(gameName));
+			getAverageRating(gameName);
+			addRating(1, getGameIdentByName(gameName));
+			addComment(1, getGameIdentByName(gameName));
+		} catch (GameException e) {
+			System.err.println("Error during load GameIdent"+e);
+		}
 		showComments(gameName);
+	}
+
+	private int getGameIdentByName(String gameName) throws GameException {
+		Game gameByName = gameImpl.getGameByName(gameName);
+		int identGame = gameByName.getIdentGame();
+		return identGame;
 	}
 
 	private void showScore(String game) {
@@ -78,49 +87,13 @@ public class ConsoleUI_JDBC implements ServiceInterface {
 	private BufferedReader input = new BufferedReader(new InputStreamReader(
 			System.in));
 
-	/**
-	 * Reads line from console.
-	 * 
-	 * @return the string from console
-	 */
-	private String readLine() {
-		// In JDK 6.0 and above Console class can be used
-		// return System.console().readLine();
-
-		try {
-			return input.readLine();
-		} catch (IOException e) {
-			return null;
-		}
-	}
-
-	/**
-	 * Iterate list of Games and returns ID of finding game or -1 if there is no
-	 * match
-	 * 
-	 * @param gameName
-	 * @return Ident of game from parameter
-	 */
-	private int findGameIdentByName(String gameName) {
-		try {
-			for (Game game : gameImpl.getGameList()) {
-				if (game.getGameName().equals(gameName)) {
-					return game.getIdentGame();
-				}
-			}
-		} catch (GameException e) {
-			e.printStackTrace();
-		}
-		return -1;
-	}
-
+	
 	private void addHighScore(int highScore, int identPlayer, int identGame) {
 
 		if (highScore > 0) {
-			Date date = new Date();
 			try {
 				score.add(new Score(1000 / highScore, identPlayer, identGame,
-						date));
+						new Date()));
 			} catch (ScoreException e) {
 				e.printStackTrace();
 			}

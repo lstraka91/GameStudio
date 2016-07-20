@@ -1,39 +1,52 @@
 package sk.tsystems.gamestudio.entity;
 
+import java.util.Date;
+
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 @Entity
-public class Commentos {
+@Table(name="Comments")
+public class Comment {
 
 	@Id
 	@GeneratedValue
 	private int ident;
 
+	@Column(name="comments")
 	private String userComment;
 	@Transient
 	private String gameName;
 	@Transient
 	private String playerName;
+	
 	@ManyToOne(cascade = CascadeType.ALL)
-	private Hra hra;
+	private Game hra;
 	@ManyToOne(cascade = CascadeType.ALL)
 	private Hrac hrac;
 	
+	@Temporal(TemporalType.DATE)
+	@Column(name="date_comment")
+	private Date dateCommented;
 	
 	
-	public Commentos( String userComment, Hra hra, Hrac hrac) {
+	
+	public Comment( String userComment, Game hra, Hrac hrac) {
 		
 		this.userComment = userComment;
 		this.hra = hra;
 		this.hrac = hrac;
 	}
 	
-	public Commentos(){
+	public Comment(){
 		
 	}
 	public int getIdent() {
@@ -61,7 +74,17 @@ public class Commentos {
 	public void setPlayerName(String playerName) {
 		this.playerName = playerName;
 	}
-//	public int getIdentPlayer() {
+	
+	
+public Date getDateCommented() {
+		return dateCommented;
+	}
+
+	public void setDateCommented(Date dateCommented) {
+		this.dateCommented = dateCommented;
+	}
+
+	//	public int getIdentPlayer() {
 //		return id_user;
 //	}
 //	public void setIdentPlayer(int identPlayer) {
@@ -73,11 +96,11 @@ public class Commentos {
 //	public void setIdentGame(int identGame) {
 //		this.id_game = identGame;
 //	}
-	public Hra getHra() {
+	public Game getHra() {
 		return hra;
 	}
-	public void setHra(Hra hra) {
-		this.hra = hra;
+	public void setHra(Game game) {
+		this.hra = game;
 	}
 	public Hrac getHrac() {
 		return hrac;

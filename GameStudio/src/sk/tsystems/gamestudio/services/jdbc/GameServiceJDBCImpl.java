@@ -16,6 +16,7 @@ import sk.tsystems.gamestudio.services.GameService;
 
 public class GameServiceJDBCImpl implements GameService{
 	private final String SELECT_GAMES= "SELECT * FROM GAME";
+	private final String SELECT_GAME_BY_NAME= "SELECT * FROM GAME WHERE NAME = ?";
 	
 	@Override
 	public void add(Game game)throws GameException {
@@ -41,6 +42,25 @@ public class GameServiceJDBCImpl implements GameService{
 		}
 
 		return games;
+	}
+	@Override
+	public Game getGameByName(String name) throws GameException{
+		Game game = null;
+		try (Connection connection = DriverManager.getConnection(DatabaseSetting.URL, DatabaseSetting.USER,
+				DatabaseSetting.PASSWORD); 
+				PreparedStatement ps = connection.prepareStatement(SELECT_GAME_BY_NAME)) {
+			ps.setString(1, name);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					game = new Game(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
+					
+				}
+			}
+		} catch (SQLException e) {
+			throw new GameException("Error during load the game "+name, e);
+		}
+
+		return game;
 	}
 
 	

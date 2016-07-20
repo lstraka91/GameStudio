@@ -9,8 +9,8 @@ import javax.persistence.Id;
 
 
 public class Comments {
-	@Id
-	@GeneratedValue
+//	@Id
+//	@GeneratedValue
 	private int ident;
 
 	private String comment;

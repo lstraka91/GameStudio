@@ -1,18 +1,32 @@
 package sk.tsystems.gamestudio.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class Game {
 
+	@Id
+	@GeneratedValue
+	@Column(name="ID_game")
 	private int identGame;
-	private String gameName;
-	private String gameURL;
+	
+	private String name;
+	private String url;
 	private String author;
 
 	public Game(int identGame, String gameName, String author, String gameURL) {
 
 		this.identGame = identGame;
-		this.gameName = gameName;
-		this.gameURL = gameURL;
+		this.name = gameName;
+		this.url = gameURL;
 		this.author = author;
+	}
+	
+	public Game(){
+		
 	}
 
 	public int getIdentGame() {
@@ -24,19 +38,19 @@ public class Game {
 	}
 
 	public String getGameName() {
-		return gameName;
+		return name;
 	}
 
 	public void setGameName(String gameName) {
-		this.gameName = gameName;
+		this.name = gameName;
 	}
 
 	public String getGameURL() {
-		return gameURL;
+		return url;
 	}
 
 	public void setGameURL(String gameURL) {
-		this.gameURL = gameURL;
+		this.url = gameURL;
 	}
 
 	public String getAuthor() {

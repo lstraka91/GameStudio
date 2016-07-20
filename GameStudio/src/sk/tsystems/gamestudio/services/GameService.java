@@ -9,4 +9,6 @@ public interface GameService {
 	public void add(Game game) throws GameException;
 
 	public List<Game> getGameList() throws GameException;
+	
+	public Game getGameByName(String name) throws GameException;
 }

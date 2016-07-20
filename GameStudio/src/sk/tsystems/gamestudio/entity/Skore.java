@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
+
 public class Skore {
 	@Id
 	@GeneratedValue
@@ -14,7 +15,7 @@ public class Skore {
 
 	private int skore;
 	@ManyToOne(cascade = CascadeType.ALL)
-	private Hra hra;
+	private Game game;
 	@ManyToOne(cascade = CascadeType.ALL)
 	private Hrac hrac;
 
@@ -26,12 +27,12 @@ public class Skore {
 		this.skore = skore;
 	}
 
-	public Hra getHra() {
-		return hra;
+	public Game getHra() {
+		return game;
 	}
 
-	public void setHra(Hra hra) {
-		this.hra = hra;
+	public void setHra(Game hra) {
+		this.game = hra;
 	}
 
 	public Hrac getHrac() {
