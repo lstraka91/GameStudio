@@ -177,7 +177,7 @@ public class ConsoleUI implements UserInterface {
 					int rowMax = 65 + field.getRowCount() - 1;
 					char tempRowMax = (char) rowMax;
 					char tempRowMin = (char) rowMin;
-					if (row >= tempRowMin && row < tempRowMax
+					if (row >= tempRowMin && row <= tempRowMax
 							&& column < field.getColumnCount()) {
 
 						field.markTile(row - 65, column);
