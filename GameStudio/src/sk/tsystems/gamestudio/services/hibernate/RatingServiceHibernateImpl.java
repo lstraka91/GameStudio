@@ -7,11 +7,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
 import sk.ness.jpa.JpaHelper;
-import sk.tsystems.gamestudio.entity.Rejting;
+import sk.tsystems.gamestudio.entity.Rating;
 import sk.tsystems.gamestudio.exceptions.RatingException;
-import sk.tsystems.gamestudio.services.RejtingService;
+import sk.tsystems.gamestudio.services.RatingService;
 
-public class RejtingServiceHibernateImpl implements RejtingService {
+public class RatingServiceHibernateImpl implements RatingService {
 	private float avgRate;
 	private int count;
 
@@ -32,7 +32,7 @@ public class RejtingServiceHibernateImpl implements RejtingService {
 	}
 
 	@Override
-	public void add(Rejting rejting) throws RatingException {
+	public void add(Rating rejting) throws RatingException {
 		if (selectRejting(rejting) == 0) {
 
 			JpaHelper.beginTransaction();
@@ -45,54 +45,54 @@ public class RejtingServiceHibernateImpl implements RejtingService {
 	}
 
 	@Override
-	public List<Rejting> findRejtingForGame(String game) throws RatingException {
+	public List<Rating> findRatingForGame(String game) throws RatingException {
 
 		JpaHelper.beginTransaction();
 		EntityManager em = JpaHelper.getEntityManager();
 		JpaHelper.commitTransaction();
 		return em
 				.createQuery(
-						"Select r from Rejting r JOIN r.hra h where h.gameName=:gameName")
+						"Select r from Rating r JOIN r.game h where h.gameName=:gameName")
 				.setParameter("gameName", game).getResultList();
 	}
 
-	public int selectRejting(Rejting rejting) {
+	public int selectRejting(Rating rating) {
 		JpaHelper.beginTransaction();
 		EntityManager em = JpaHelper.getEntityManager();
 		JpaHelper.commitTransaction();
-		ArrayList<Rejting> rejtList = (ArrayList<Rejting>) em
-				.createQuery("Select r from Rejting r where r.rajtId=:rajt ")
-				.setParameter("rajt", rejting.getRatingId()).getResultList();
-		System.out.println(rejtList);
-		System.out.println(rejtList.size());
-		return rejtList.size();
+		ArrayList<Rating> ratingList = (ArrayList<Rating>) em
+				.createQuery("Select r from Rating r where r.ratingId=:rid ")
+				.setParameter("rid", rating.getRatingId()).getResultList();
+		System.out.println(ratingList);
+		System.out.println(ratingList.size());
+		return ratingList.size();
 	}
 
-	private void updateRejting(Rejting rejting) {
+	private void updateRejting(Rating rating) {
 		EntityManager em = JpaHelper.getEntityManager();
 		EntityTransaction updt = em.getTransaction();
 		updt.begin();
-		em.createQuery("update Rejting set rejting=:rejt where rajtId=:rajt")
-				.setParameter("rejt", rejting.getRating())
-				.setParameter("rajt", rejting.getRatingId()).executeUpdate();
+		em.createQuery("update Rating set rating=:rating where ratingId=:ratingId")
+				.setParameter("rating", rating.getRating())
+				.setParameter("ratingId", rating.getRatingId()).executeUpdate();
 		updt.commit();
 	}
 
-	public void getAverageRatingAndCount(Rejting rejting) {
+	public void getAverageRatingAndCount(Rating rating) {
 		JpaHelper.beginTransaction();
 		EntityManager em = JpaHelper.getEntityManager();
 		List<Long> countList = em
 				.createQuery(
-						"select COUNT(*) from Rejting r join r.ratingId h  where h.game=:gameName group by h.hra")
-				.setParameter("gameName", rejting.getRatingId().getGameId())
+						"select COUNT(*) from Rating r join r.ratingId h  where h.game=:gameName group by h.game")
+				.setParameter("gameName", rating.getRatingId().getGameId())
 				.getResultList();
 		JpaHelper.commitTransaction();
 
 		JpaHelper.beginTransaction();
 		List<Double> avgList = em
 				.createQuery(
-						"select round(avg(r.rejting),2) from Rejting r join r.ratingId h  where h.game=:gameName group by h.hra")
-				.setParameter("gameName", rejting.getRatingId().getGameId())
+						"select round(avg(r.rating),2) from Rating r join r.ratingId h  where h.game=:gameName group by h.game")
+				.setParameter("gameName", rating.getRatingId().getGameId())
 				.getResultList();
 		JpaHelper.commitTransaction();
 		double avg = 0;

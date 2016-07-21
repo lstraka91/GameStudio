@@ -9,33 +9,33 @@ import sk.tsystems.gamestudio.ServiceInterface;
 import sk.tsystems.gamestudio.entity.Comment;
 import sk.tsystems.gamestudio.entity.Game;
 import sk.tsystems.gamestudio.entity.Player;
-import sk.tsystems.gamestudio.entity.Rejting;
+import sk.tsystems.gamestudio.entity.Rating;
 import sk.tsystems.gamestudio.entity.RatingId;
-import sk.tsystems.gamestudio.entity.Skore;
+import sk.tsystems.gamestudio.entity.Score;
 import sk.tsystems.gamestudio.exceptions.GameException;
 import sk.tsystems.gamestudio.exceptions.RatingException;
 import sk.tsystems.gamestudio.exceptions.ScoreException;
 import sk.tsystems.gamestudio.games.GameInterface;
 import sk.tsystems.gamestudio.services.hibernate.CommentServiceHibernateImpl;
-import sk.tsystems.gamestudio.services.hibernate.HraServiceHibernateImpl;
-import sk.tsystems.gamestudio.services.hibernate.HracServiceHibernateImpl;
-import sk.tsystems.gamestudio.services.hibernate.RejtingServiceHibernateImpl;
-import sk.tsystems.gamestudio.services.hibernate.SkoreServiceHibernateImpl;
+import sk.tsystems.gamestudio.services.hibernate.GameServiceHibernateImpl;
+import sk.tsystems.gamestudio.services.hibernate.PlayerServiceHibernateImpl;
+import sk.tsystems.gamestudio.services.hibernate.RatingServiceHibernateImpl;
+import sk.tsystems.gamestudio.services.hibernate.ScoreServiceHibernateImpl;
 
 public class ConsoleUIHibernate implements ServiceInterface {
-	SkoreServiceHibernateImpl skoreImpl;
-	RejtingServiceHibernateImpl rejtingImpl;
-	HracServiceHibernateImpl playerImpl;
-	HraServiceHibernateImpl gameImpl;
+	ScoreServiceHibernateImpl skoreImpl;
+	RatingServiceHibernateImpl rejtingImpl;
+	PlayerServiceHibernateImpl playerImpl;
+	GameServiceHibernateImpl gameImpl;
 	CommentServiceHibernateImpl commentImpl;
 	Game game;
 	Player player;
 
 	public ConsoleUIHibernate() {
-		skoreImpl = new SkoreServiceHibernateImpl();
-		rejtingImpl = new RejtingServiceHibernateImpl();
-		playerImpl = new HracServiceHibernateImpl();
-		gameImpl = new HraServiceHibernateImpl();
+		skoreImpl = new ScoreServiceHibernateImpl();
+		rejtingImpl = new RatingServiceHibernateImpl();
+		playerImpl = new PlayerServiceHibernateImpl();
+		gameImpl = new GameServiceHibernateImpl();
 		commentImpl = new CommentServiceHibernateImpl();
 		game = new Game();
 		player = new Player();
@@ -51,6 +51,7 @@ public class ConsoleUIHibernate implements ServiceInterface {
 		// DOCASNE NESPRAVENE PRE UZIVATELA
 		try {
 			addHighScore(game.getScore(), gameName, playerName);
+			showAvgRateAndCount(gameName);
 			addRating(gameName, playerName);
 			addComment(gameName, playerName);
 			showComments(gameName);
@@ -62,12 +63,12 @@ public class ConsoleUIHibernate implements ServiceInterface {
 
 	public void showSkore(String gameName) {
 		try {
-			List<Skore> scoreList = skoreImpl.findSkoreForGame(gameName);
+			List<Score> scoreList = skoreImpl.getScoreforGame(gameName);
 			int index = 0;
 			System.out.println("========TABLE HIGH SCORE========");
 			System.out.printf("   %-10s %3s ", "PLAYER", "SCORE \n");
 			System.out.println("---------------------------------------");
-			for (Skore skore : scoreList) {
+			for (Score skore : scoreList) {
 				index++;
 				System.out.print(index + ". ");
 				System.out.printf("%-10s %3d \n", skore.getPlayer().getName(),
@@ -84,13 +85,14 @@ public class ConsoleUIHibernate implements ServiceInterface {
 	}
 
 	private void addHighScore(int highScore, String gameName, String playerName) throws GameException {
-		Skore skore = new Skore();
+		Score skore = new Score();
 		if (highScore > 0) {
 			game = gameImpl.getGameByName(gameName);
 			player = playerImpl.getHracFromDB(playerName);
 			skore.setGame(game);
 			skore.setPlayer(player);
 			skore.setScore(1000 / highScore);
+			skore.setDate(new Date());
 			try {
 				skoreImpl.add(skore);
 			} catch (ScoreException e) {
@@ -103,7 +105,7 @@ public class ConsoleUIHibernate implements ServiceInterface {
 		try {
 			game = gameImpl.getGameByName(gameName);
 
-			Rejting rejting = new Rejting();
+			Rating rejting = new Rating();
 			RatingId rId = new RatingId();
 			rId.setGameId(game.getIdentGame());
 			rejting.setRatingId(rId);
@@ -137,12 +139,13 @@ public class ConsoleUIHibernate implements ServiceInterface {
 			if (ratingScanner.hasNextInt()) {
 				int rating = ratingScanner.nextInt();
 				if (rating > 0 && rating <= 5) {
-					Rejting ratingObj = new Rejting();
+					Rating ratingObj = new Rating();
 					RatingId rid = new RatingId();
 					rid.setGameId(game.getIdentGame());
 					rid.setPlayer(player.getId());
 					ratingObj.setRating(rating);
 					ratingObj.setRatingId(rid);
+					ratingObj.setRateDate(new Date());
 					try {
 						rejtingImpl.add(ratingObj);
 					} catch (RatingException e) {
@@ -156,11 +159,11 @@ public class ConsoleUIHibernate implements ServiceInterface {
 	}
 
 	private Player getPlayer(String playerName) {
-		return new HracServiceHibernateImpl().getHracFromDB(playerName);
+		return new PlayerServiceHibernateImpl().getHracFromDB(playerName);
 	}
 
 	private Game getGame(String gameName) throws GameException {
-		Game game = new HraServiceHibernateImpl().getGameByName(gameName);
+		Game game = new GameServiceHibernateImpl().getGameByName(gameName);
 		return game;
 	}
 

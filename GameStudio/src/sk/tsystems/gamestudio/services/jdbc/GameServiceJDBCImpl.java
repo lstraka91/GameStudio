@@ -9,9 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sk.tsystems.gamestudio.entity.Game;
-import sk.tsystems.gamestudio.entity.Score;
 import sk.tsystems.gamestudio.exceptions.GameException;
-import sk.tsystems.gamestudio.exceptions.ScoreException;
 import sk.tsystems.gamestudio.services.GameService;
 
 public class GameServiceJDBCImpl implements GameService{

@@ -11,8 +11,8 @@ import sk.tsystems.gamestudio.entity.Comment;
 import sk.tsystems.gamestudio.entity.Game;
 import sk.tsystems.gamestudio.entity.Player;
 import sk.tsystems.gamestudio.entity.RatingId;
-import sk.tsystems.gamestudio.entity.Rejting;
-import sk.tsystems.gamestudio.entity.Skore;
+import sk.tsystems.gamestudio.entity.Rating;
+import sk.tsystems.gamestudio.entity.Score;
 import sk.tsystems.gamestudio.exceptions.CommentException;
 import sk.tsystems.gamestudio.exceptions.GameException;
 import sk.tsystems.gamestudio.exceptions.PlayerException;
@@ -58,6 +58,9 @@ public class ConsoleUI_JDBC implements ServiceInterface {
 			System.err.println("Error during load Game" + e);
 		} catch (PlayerException e) {
 			System.err.println("Error during load Player" + e);
+		} catch (CommentException e) {
+			
+			e.printStackTrace();
 		}
 		showComments(gameName);
 	}
@@ -101,7 +104,7 @@ public class ConsoleUI_JDBC implements ServiceInterface {
 		if (highScore > 0) {
 			try {
 				Date date = new Date();
-				Skore score= new Skore();
+				Score score= new Score();
 				score.setGame(game);
 				score.setPlayer(player);
 				score.setScore(1000/highScore);
@@ -169,7 +172,7 @@ public class ConsoleUI_JDBC implements ServiceInterface {
 				if (rating > 0 && rating <= 5) {
 					Date date = new Date();
 					try {
-						Rejting ratingToAdd=new Rejting();
+						Rating ratingToAdd=new Rating();
 						RatingId rid= new RatingId();
 						rid.setGameId(game.getIdentGame());
 						rid.setPlayer(player.getId());
@@ -223,7 +226,7 @@ public class ConsoleUI_JDBC implements ServiceInterface {
 		return false;
 	}
 
-	private void addComment(Player player, Game game) {
+	private void addComment(Player player, Game game) throws CommentException {
 		Date date = new Date();
 		System.out.println("Do you want to comment the game?");
 		if (doYouWant() == true) {
@@ -231,17 +234,14 @@ public class ConsoleUI_JDBC implements ServiceInterface {
 			System.out.println("Enter the comment: ");
 			Scanner read = new Scanner(System.in);
 			String userComment = read.nextLine();
-
-			try {
+			
 				Comment commentToAdd = new Comment();
 				commentToAdd.setUserComment(userComment);
 				commentToAdd.setGame(game);
 				commentToAdd.setDateCommented(new java.sql.Date(date.getTime()));
 				commentToAdd.setPlayer(player);
 				this.comment.add(commentToAdd);
-			} catch (CommentException e) {
-				System.err.println("Error during saving Comment");
-			}
+			
 		}
 
 	}

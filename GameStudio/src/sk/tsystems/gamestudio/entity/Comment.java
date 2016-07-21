@@ -85,18 +85,7 @@ public Date getDateCommented() {
 		this.dateCommented = dateCommented;
 	}
 
-	//	public int getIdentPlayer() {
-//		return id_user;
-//	}
-//	public void setIdentPlayer(int identPlayer) {
-//		this.id_user = identPlayer;
-//	}
-//	public int getIdentGame() {
-//		return id_game;
-//	}
-//	public void setIdentGame(int identGame) {
-//		this.id_game = identGame;
-//	}
+
 	public Game getGame() {
 		return game;
 	}

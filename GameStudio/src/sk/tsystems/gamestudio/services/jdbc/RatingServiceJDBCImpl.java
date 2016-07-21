@@ -10,7 +10,7 @@ import java.util.List;
 
 import sk.tsystems.gamestudio.entity.Game;
 import sk.tsystems.gamestudio.entity.Player;
-import sk.tsystems.gamestudio.entity.Rejting;
+import sk.tsystems.gamestudio.entity.Rating;
 import sk.tsystems.gamestudio.exceptions.RatingException;
 import sk.tsystems.gamestudio.services.RatingService;
 
@@ -58,7 +58,7 @@ public class RatingServiceJDBCImpl implements RatingService {
 	}
 
 	@Override
-	public void add(Rejting rating) throws RatingException {
+	public void add(Rating rating) throws RatingException {
 		try (Connection connection = DriverManager.getConnection(
 				DatabaseSetting.URL, DatabaseSetting.USER,
 				DatabaseSetting.PASSWORD);
@@ -76,8 +76,8 @@ public class RatingServiceJDBCImpl implements RatingService {
 	}
 
 	@Override
-	public List<Rejting> findRatingForGame(String game) throws RatingException {
-		List<Rejting> ratingsList = new ArrayList<>();
+	public List<Rating> findRatingForGame(String game) throws RatingException {
+		List<Rating> ratingsList = new ArrayList<>();
 
 //		try (Connection connection = DriverManager.getConnection(
 //				DatabaseSetting.URL, DatabaseSetting.USER,
@@ -108,7 +108,7 @@ public class RatingServiceJDBCImpl implements RatingService {
 		try {
 			System.out.printf("   %-10s %3s  %s ", "PLAYER", "RATE", "DATE \n");
 			System.out.println("---------------------------------------");
-			for (Rejting rating : findRatingForGame(getGame())) {
+			for (Rating rating : findRatingForGame(getGame())) {
 				index++;
 				sb.append(index + ". " + rating.toString());
 
@@ -125,7 +125,7 @@ public class RatingServiceJDBCImpl implements RatingService {
 	}
 
 	public void averageRate(String game) throws RatingException {
-		Rejting rating = null;
+		Rating rating = null;
 		try (Connection connection = DriverManager.getConnection(
 				DatabaseSetting.URL, DatabaseSetting.USER,
 				DatabaseSetting.PASSWORD);

@@ -3,91 +3,80 @@ package sk.tsystems.gamestudio.entity;
 import java.util.Date;
 import java.util.Formatter;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+@Entity
+@Table(name= "Score")
 public class Score {
-	
+	@Id
+	@GeneratedValue
+	private int id;
+
 	private int score;
-	private int identPlayer;
-	private int identGame;
-	private Date datePlayed;
+	@ManyToOne(cascade = CascadeType.ALL)
+	private Game game;
+	@ManyToOne(cascade = CascadeType.ALL)
+	private Player player;
+	@Temporal(TemporalType.DATE)
+	@Column(name="date_played")
+	private Date date;
+	@Transient
 	private String gameName;
+	@Transient
 	private String playerName;
 	
-	public Score(){
-		
-	}
 	
-	public Score(int score, int identPlayer, int identGame, Date datePlayed,
-			String gameName, String playerName) {
-		
-		this.score = score;
-		this.identPlayer = identPlayer;
-		this.identGame = identGame;
-		this.datePlayed = datePlayed;
+	public String getGameName() {
+		return gameName;
+	}
+	public void setGameName(String gameName) {
 		this.gameName = gameName;
+	}
+	public String getPlayerName() {
+		return playerName;
+	}
+	public void setPlayerName(String playerName) {
 		this.playerName = playerName;
 	}
-
-
-	public Score(int score, int identPlayer, int identGame, Date datePlayed) {
-		
-		this.score = score;
-		this.identPlayer = identPlayer;
-		this.identGame = identGame;
-		this.datePlayed = datePlayed;
-		
-	}
-	
-	
 	public int getScore() {
 		return score;
 	}
 	public void setScore(int score) {
 		this.score = score;
 	}
-	public int getIdentPlayer() {
-		return identPlayer;
+	public Game getGame() {
+		return game;
 	}
-	public void setIdentPlayer(int identPlayer) {
-		this.identPlayer = identPlayer;
+	public void setGame(Game game) {
+		this.game = game;
 	}
-	public int getIdentGame() {
-		return identGame;
+	public Player getPlayer() {
+		return player;
 	}
-	public void setIdentGame(int identGame) {
-		this.identGame = identGame;
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
-	public Date getDatePlayed() {
-		return datePlayed;
+	public Date getDate() {
+		return date;
 	}
-	public void setDatePlayed(Date datePlayed) {
-		this.datePlayed = datePlayed;
+	public void setDate(Date date) {
+		this.date = date;
 	}
 	
-	public String getGameName() {
-		return gameName;
-	}
-
-
-	public void setGameName(String gameName) {
-		this.gameName = gameName;
-	}
-
-
-	public String getPlayerName() {
-		return playerName;
-	}
-
-
-	public void setPlayerName(String playerName) {
-		this.playerName = playerName;
-	}
-
-
 	public String toString(){
 		StringBuilder sb= new StringBuilder();
 		Formatter formatter = new Formatter();
 		
-		sb.append(formatter.format("%-10s %3d  %td.%tm.%ty ",getPlayerName(),getScore(),getDatePlayed(),getDatePlayed(),getDatePlayed()));
+		sb.append(formatter.format("%-10s %3d  %td.%tm.%ty ",getPlayerName(),getScore(),getDate(),getDate(),getDate()));
 		
 //		sb.append(formatter.format("",getPlayerName()));
 //		sb.append(formatter.format("%d",getScore()));
@@ -95,4 +84,5 @@ public class Score {
 		formatter.close();
 		return sb.toString();
 	}
+
 }

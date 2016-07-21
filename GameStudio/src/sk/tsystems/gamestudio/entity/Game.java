@@ -10,7 +10,7 @@ public class Game {
 
 	@Id
 	@GeneratedValue
-	@Column(name="id")
+	@Column(name="id_game")
 	private int identGame;
 	
 	private String name;

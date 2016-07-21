@@ -6,9 +6,9 @@ import javax.persistence.EntityManager;
 
 import sk.ness.jpa.JpaHelper;
 import sk.tsystems.gamestudio.entity.Comment;
-import sk.tsystems.gamestudio.services.CommentosService;
+import sk.tsystems.gamestudio.services.CommentService;
 
-public class CommentServiceHibernateImpl implements CommentosService {
+public class CommentServiceHibernateImpl implements CommentService {
 
 	@Override
 	public void add(Comment comment) {
